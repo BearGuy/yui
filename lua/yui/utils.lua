@@ -16,25 +16,86 @@ function M.create_win_buf()
   return win, buf
 end
 
+--function M.create_win(buf)
+    ---- Create a new buffer and open it in a new window
+    ----local chat_width = math.floor(vim.o.columns * 0.4)
+    --local chat_width = math.floor(80)
+    --local config = {
+        ----relative = 'win',
+        ----width = vim.o.columns * 0.8,  -- Specify the width as 80% of the total number of columns
+        ----row = vim.o.lines * 0.1,  -- Position the window 10% down the screen
+        --style = 'minimal',
+        --relative = 'editor',
+        --row = 0,
+        --col = vim.o.columns - chat_width,
+        --width = chat_width,
+        --height = vim.o.lines,
+        --border = 'single',       --col = vim.o.columns * 0.1  -- Position the window 10% across the screen
+    --}
+    --local win = vim.api.nvim_open_win(buf, true, config)
+
+    --api.nvim_buf_set_option(buf, 'filetype', 'markdown')
+    --api.nvim_win_set_option(win, 'wrap', true)
+    --api.nvim_buf_set_option(buf, 'textwidth', 80)
+
+    ---- Create a new buffer for the text input
+    --local input_buf = vim.api.nvim_create_buf(false, true)
+
+    ---- Open the input buffer in a new window below the conversation output window
+    --local input_win_config = {
+        --style = 'minimal',
+        --relative = 'editor',
+        --row = vim.o.lines - 5,  -- Position the input window at the bottom
+        --col = vim.o.columns - chat_width,
+        --width = chat_width,
+        --height = 5,
+        --border = 'single',
+    --}
+    --local input_win = vim.api.nvim_open_win(input_buf, true, input_win_config)
+
+    ---- Switch back to the conversation output window
+    --vim.api.nvim_set_current_win(win)
+
+    --return win
+--end
+
+
 function M.create_win(buf)
     -- Create a new buffer and open it in a new window
-    --local chat_width = math.floor(vim.o.columns * 0.4)
     local chat_width = math.floor(80)
+    local output_height = vim.o.lines - 10  -- Adjust the height to leave space for the input window
     local config = {
-        --relative = 'win',
-        --width = vim.o.columns * 0.8,  -- Specify the width as 80% of the total number of columns
-        --row = vim.o.lines * 0.1,  -- Position the window 10% down the screen
         style = 'minimal',
         relative = 'editor',
         row = 0,
         col = vim.o.columns - chat_width,
         width = chat_width,
-        height = vim.o.lines,
-        border = 'single',       --col = vim.o.columns * 0.1  -- Position the window 10% across the screen
+        height = output_height,
+        border = 'single',
     }
     local win = vim.api.nvim_open_win(buf, true, config)
+
+    api.nvim_buf_set_option(buf, 'filetype', 'markdown')
     api.nvim_win_set_option(win, 'wrap', true)
     api.nvim_buf_set_option(buf, 'textwidth', 80)
+
+    -- Create a new buffer for the text input
+    local input_buf = vim.api.nvim_create_buf(false, true)
+
+    -- Open the input buffer in a new window below the conversation output window
+    local input_win_config = {
+        style = 'minimal',
+        relative = 'editor',
+        row = output_height + 5,  -- Position the input window below the output window
+        col = vim.o.columns - chat_width,
+        width = chat_width,
+        height = 5,
+        border = 'single',
+    }
+    local input_win = vim.api.nvim_open_win(input_buf, true, input_win_config)
+
+    -- Switch back to the conversation output window
+    vim.api.nvim_set_current_win(win)
 
     return win
 end

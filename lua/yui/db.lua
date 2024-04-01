@@ -4,6 +4,9 @@ local tbl = require "sqlite.tbl" --- for constructing sql tables
 --- sqlite builtin helper functions
 local julianday, strftime = sqlite.lib.julianday, sqlite.lib.strftime
 
+-- create the db in the nvim config of the user
+local db_path = vim.fn.stdpath('config') .. '/plugin/yui/yui.db'
+
 ---@alias SenderType '"user"' | '"gpt"'
 
 --[[ Datashapes ---------------------------------------------
@@ -50,7 +53,7 @@ local messages = tbl("messages", {
 
 ---@type ChatDatabase
 local ChatDB = sqlite {
-  uri = "~/.config/nvim/lua/yui/yui.db",
+  uri = db_path,
   chats = chats,
   messages = messages,
 }
